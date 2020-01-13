@@ -1,7 +1,7 @@
 from groentenenfruit.settings.base import *
 import django_heroku
 
-django_heroku.settings(locals())
+django_heroku.settings(locals(), staticfiles=False, )
 
 DEBUG = False
 ALLOWED_HOSTS = ['groentenenfruit.herokuapp.com']
