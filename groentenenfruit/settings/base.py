@@ -37,8 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'cloudinary_storage',
     'cloudinary',
-    'shop'
+    'users',
+    'shop',
 ]
+
+AUTH_USER_MODEL = 'users.ShopUser'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
