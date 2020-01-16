@@ -10,4 +10,8 @@ class Item(models.Model):
     unit = models.ForeignKey(PriceUnit, on_delete=models.SET_NULL, null=True)
     price = models.DecimalField(decimal_places=2, max_digits=6)
     plu_number = models.IntegerField()
-    image = models.ImageField(null=True, default=None, upload_to='produce')
+    image = models.ImageField(blank=True, default=None, upload_to='produce')
+
+
+class ShoppingCart(models.Model):
+    pass
