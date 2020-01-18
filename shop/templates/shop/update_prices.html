@@ -1,0 +1,23 @@
+{% extends 'shop/base.html' %}
+{% block head %}
+
+{% endblock %}
+{% block head_scripts %}
+
+{% endblock %}
+{% block content %}
+    <section class="section">
+        <div class="container">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">submit</button>
+                <button type="reset">reset</button>
+            </form>
+
+        </div>
+    </section>
+{% endblock %}
+{% block body_scripts %}
+
+{% endblock %}
