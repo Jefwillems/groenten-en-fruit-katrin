@@ -15,6 +15,7 @@ class Item(models.Model):
     plu_number = models.IntegerField(unique=True)
     plu_name = models.CharField(unique=True, max_length=255)
     image = models.ImageField(blank=True, default=None, upload_to='produce')
+    description = models.TextField(blank=True, default='')
 
     @staticmethod
     def from_plu_line(line):

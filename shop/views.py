@@ -1,4 +1,6 @@
-from django.views.generic import TemplateView, UpdateView, FormView
+from django.views.generic import (TemplateView,
+                                  FormView,
+                                  ListView)
 from django.contrib.auth.mixins import LoginRequiredMixin
 from shop.forms import UpdatePricesForm
 from shop.models import Item
@@ -9,8 +11,11 @@ class IndexView(TemplateView):
     template_name = 'shop/index.html'
 
 
-class OrderView(TemplateView):
+class OrderView(ListView):
     template_name = 'shop/order.html'
+    model = Item
+    queryset = Item.objects.all().order_by('name')
+    context_object_name = 'items'
 
 
 class UploadPricesView(LoginRequiredMixin, FormView):

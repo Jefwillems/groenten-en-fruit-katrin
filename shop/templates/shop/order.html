@@ -1,13 +1,47 @@
 {% extends 'shop/base.html' %}
+{% load static %}
 {% block content %}
     <section class="section">
         <div class="container">
-            <h1 class="title">
-                Hello Order
-            </h1>
-            <p class="subtitle">
-                My first website with <strong>Bulma</strong>!
-            </p>
+            <div class="columns">
+                {% for item in items %}
+                    <div class="column is-one-fifth is-half-mobile is-one-third-tablet">
+                        <div class="card">
+                            <div class="card-image">
+                                <figure class="image is-4by3">
+                                    <img src="{{ item.image.url }}"
+                                         alt="photo of {{ item.name }}">
+                                </figure>
+                            </div>
+                            <div class="card-content">
+                                <div class="media">
+                                    <div class="media-content">
+                                        <p class="title is-4">{{ item.name }}</p>
+                                        <p class="subtitle is-6">€ {{ item.price }} / {{ item.unit.shortcode }}</p>
+                                    </div>
+                                </div>
+
+                                <div class="content">
+                                    {{ item.description }}
+                                </div>
+                            </div>
+                            <footer class="card-footer">
+                                <div class="buttons has-addons card-footer-item is-paddingless">
+                                    <button class="button is-link is-inverted remove-item">-</button>
+                                    <button class="button is-primary is-inverted is-disabled"
+                                            id="amount-{{ item.plu_number }}">0
+                                    </button>
+                                    <button class="button is-link is-inverted add-item">+</button>
+                                </div>
+                            </footer>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
     </section>
+{% endblock %}
+
+{% block body_scripts %}
+    <script src="{% static 'shop/js/orderform.js' %}"></script>
 {% endblock %}
