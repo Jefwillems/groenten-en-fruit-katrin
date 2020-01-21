@@ -6,25 +6,28 @@
   const createNewValue = (target, fn) => {
     const currentValue = parseInt(target.innerText, 10);
     const newValue = fn(currentValue);
-    target.innerText = validateAndAdjust(newValue)
+    return validateAndAdjust(newValue)
   };
 
   class App {
     constructor() {
       this.addBtns = document.querySelectorAll('.add-item');
       this.removeBtns = document.querySelectorAll('.remove-item');
+      stateSync.init('order_form')
     }
 
     init() {
-      [].forEach.call(this.addBtns, (btn) => {
-        btn.addEventListener('click', (ev) => {
-          createNewValue(ev.target.parentNode.children[1], addOne)
-        })
-      });
+      this.setupButtons(this.addBtns, addOne);
+      this.setupButtons(this.removeBtns, substractOne)
+    }
 
-      [].forEach.call(this.removeBtns, (btn) => {
+    setupButtons(btns, fn) {
+      [].forEach.call(btns, (btn) => {
         btn.addEventListener('click', (ev) => {
-          createNewValue(ev.target.parentNode.children[1], substractOne)
+          const targetNode = ev.target.parentNode.children[1];
+          const newValue = createNewValue(targetNode, fn);
+          targetNode.innerText = newValue;
+          stateSync.setValue(targetNode.id, newValue);
         });
       });
     }
