@@ -1,7 +1,7 @@
 from django.views.generic import (TemplateView,
                                   FormView,
                                   ListView)
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from shop.forms import UpdatePricesForm
 from shop.models import Item
 from django.urls import reverse_lazy
@@ -18,7 +18,7 @@ class OrderView(ListView):
     context_object_name = 'items'
 
 
-class UploadPricesView(LoginRequiredMixin, FormView):
+class UploadPricesView(LoginRequiredMixin, UserPassesTestMixin, FormView):
     template_name = 'shop/update_prices.html'
     form_class = UpdatePricesForm
     success_url = reverse_lazy('update-prices')
@@ -29,6 +29,9 @@ class UploadPricesView(LoginRequiredMixin, FormView):
         context['items'] = Item.objects.all()
 
         return context
+
+    def test_func(self):
+        return self.request.user.is_superuser or self.request.user.is_staff
 
     def post(self, request, *args, **kwargs):
         form_class = self.get_form_class()

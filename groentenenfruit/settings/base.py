@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 ]
 
 AUTH_USER_MODEL = 'users.ShopUser'
+LOGIN_REDIRECT_URL = 'order'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

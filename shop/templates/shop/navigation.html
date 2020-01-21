@@ -20,6 +20,11 @@
             <a class="navbar-item" href="{% url 'order' %}">
                 Order
             </a>
+            {% if request.user.is_superuser %}
+                <a class="navbar-item" href="{% url 'update-prices' %}">
+                    Update Prices
+                </a>
+            {% endif %}
         </div>
     </div>
 </nav>
