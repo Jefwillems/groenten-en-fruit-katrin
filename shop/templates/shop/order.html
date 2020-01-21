@@ -7,17 +7,19 @@
                 {% for item in items %}
                     <div class="column is-one-fifth is-half-mobile is-one-third-tablet">
                         <div class="card">
-                            <div class="card-image">
-                                <figure class="image is-4by3">
-                                    <img src="{{ item.image.url }}"
-                                         alt="photo of {{ item.name }}">
-                                </figure>
-                            </div>
+                            {% if item.image %}
+                                <div class="card-image">
+                                    <figure class="image is-4by3">
+                                        <img src="{{ item.image.url }}"
+                                             alt="photo of {{ item.name }}">
+                                    </figure>
+                                </div>
+                            {% endif %}
                             <div class="card-content">
                                 <div class="media">
                                     <div class="media-content">
                                         <p class="title is-4">{{ item.name }}</p>
-                                        <p class="subtitle is-6">€ {{ item.price }} / {{ item.unit.shortcode }}</p>
+                                        <p class="subtitle is-6">€ {{ item.price }} / {{ item.unit.name }}</p>
                                     </div>
                                 </div>
 

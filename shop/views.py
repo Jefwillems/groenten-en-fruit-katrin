@@ -14,7 +14,7 @@ class IndexView(TemplateView):
 class OrderView(ListView):
     template_name = 'shop/order.html'
     model = Item
-    queryset = Item.objects.all().order_by('name')
+    queryset = Item.objects.filter(published=True).order_by('name')
     context_object_name = 'items'
 
 
@@ -40,7 +40,8 @@ class UploadPricesView(LoginRequiredMixin, UserPassesTestMixin, FormView):
         if form.is_valid():
             for line in file:
                 line_str = line.decode('utf-8')
-                Item.from_plu_line(line_str)
+                item = Item.from_plu_line(line_str)
+                item.save()
             return self.form_valid(form)
         else:
             print(file)
