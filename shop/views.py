@@ -1,21 +1,48 @@
+from django.http import HttpResponseForbidden
 from django.views.generic import (TemplateView,
                                   FormView,
                                   ListView)
+from django.views.generic.edit import FormMixin
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from shop.forms import UpdatePricesForm
-from shop.models import Item
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
+
+from shop.forms import UpdatePricesForm, OrderForm
+from shop.models import Item, ShoppingCartItem, ShoppingCart
 
 
 class IndexView(TemplateView):
     template_name = 'shop/index.html'
 
 
-class OrderView(ListView):
+class OrderView(FormMixin, ListView):
     template_name = 'shop/order.html'
     model = Item
     queryset = Item.objects.filter(published=True).order_by('name')
     context_object_name = 'items'
+    form_class = OrderForm
+
+    def get_success_url(self):
+        return reverse(viewname='home')
+
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return HttpResponseForbidden()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        filtered = dict(
+            (key.strip('amount-'), value) for (key, value) in form.cleaned_data.items() if value is not None)
+
+        cart, created = ShoppingCart.objects.get_or_create(user=self.request.user)
+        cart.save()
+        [ShoppingCartItem(product=Item.objects.get(plu_number=plu_number), amount=amount, cart=cart).save() for
+         (plu_number, amount) in filtered.items()]
+
+        return super(OrderView, self).form_valid(form)
 
 
 class UploadPricesView(LoginRequiredMixin, UserPassesTestMixin, FormView):

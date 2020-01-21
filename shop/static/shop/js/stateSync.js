@@ -14,6 +14,10 @@
       this.checkInit();
       return this.state[key];
     },
+    reset() {
+      this.state = {};
+      this.saveState();
+    },
     saveState() {
       this.checkInit();
       localStorage.setItem(this.collection, JSON.stringify(this.state))

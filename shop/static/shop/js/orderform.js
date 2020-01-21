@@ -13,12 +13,22 @@
     constructor() {
       this.addBtns = document.querySelectorAll('.add-item');
       this.removeBtns = document.querySelectorAll('.remove-item');
+      this.valueElems = document.querySelectorAll("[id^='amount-']");
+      this.form = document.getElementById('order-form');
       stateSync.init('order_form')
     }
 
     init() {
       this.setupButtons(this.addBtns, addOne);
-      this.setupButtons(this.removeBtns, substractOne)
+      this.setupButtons(this.removeBtns, substractOne);
+      this.setupStoredValues();
+      this.hookForm();
+    }
+
+    setupStoredValues() {
+      [].forEach.call(this.valueElems, (valueElem) => {
+        valueElem.innerText = stateSync.getValue(valueElem.id) || 0;
+      });
     }
 
     setupButtons(btns, fn) {
@@ -30,6 +40,22 @@
           stateSync.setValue(targetNode.id, newValue);
         });
       });
+    }
+
+    hookForm() {
+      this.form.addEventListener('submit', (ev) => {
+        Object.entries(stateSync.state).map(([key, value]) => {
+          const input = document.createElement('input');
+          input.hidden = true;
+          input.name = key;
+          input.value = value;
+          return input;
+        }).forEach(element => {
+          this.form.appendChild(element);
+        });
+        stateSync.reset();
+        return true;
+      })
     }
   }
 
