@@ -61,6 +61,7 @@ class Item(models.Model):
 class ShoppingCart(models.Model):
     user = models.OneToOneField(to=ShopUser, on_delete=models.CASCADE, related_name='cart')
     items = models.ManyToManyField(to=Item, through='ShoppingCartItem')
+    completed = models.BooleanField(default=False)
 
 
 class ShoppingCartItem(models.Model):
