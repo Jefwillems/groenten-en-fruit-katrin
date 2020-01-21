@@ -1,8 +1,15 @@
 from django.contrib import admin
 from shop.models import Item, PriceUnit
 
-# Register your models here.
-admin.site.register(Item)
+
+class ItemAdmin(admin.ModelAdmin):
+    list_display = ['name', 'plu_number']
+
+    class Meta:
+        model = Item
+
+
+admin.site.register(Item, ItemAdmin)
 admin.site.register(PriceUnit)
 
 admin.site.site_header = 'Groenten en fruit Katrin'

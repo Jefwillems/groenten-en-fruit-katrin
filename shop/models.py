@@ -5,7 +5,11 @@ from users.models import ShopUser
 
 
 class PriceUnit(models.Model):
-    shortcode = models.CharField(max_length=30)
+    plu_shortcode = models.CharField(max_length=30)
+    name = models.CharField(max_length=30, default='')
+
+    def __str__(self):
+        return f'{self.name}'
 
 
 class Item(models.Model):
@@ -31,6 +35,9 @@ class Item(models.Model):
         if item:
             print(plu_name, unit, price, plu_number)
         return ''
+
+    def __str__(self):
+        return f'Item: {self.plu_number}/{self.name}'
 
 
 class ShoppingCart(models.Model):
