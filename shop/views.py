@@ -37,7 +37,7 @@ class OrderView(FormMixin, ListView):
         filtered = dict(
             (key.strip('amount-'), value) for (key, value) in form.cleaned_data.items() if value is not None)
 
-        cart, created = ShoppingCart.objects.get_or_create(user=self.request.user)
+        cart, created = ShoppingCart.objects.get_or_create(user=self.request.user, completed=False)
         cart.save()
         [ShoppingCartItem(product=Item.objects.get(plu_number=plu_number), amount=amount, cart=cart).save() for
          (plu_number, amount) in filtered.items()]

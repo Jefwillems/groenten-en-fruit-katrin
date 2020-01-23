@@ -11,7 +11,6 @@ class UpdatePricesForm(forms.Form):
 class OrderForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(OrderForm, self).__init__(*args, **kwargs)
-        # id="amount-{{ item.plu_number }}"
         items = Item.objects.only('plu_number')
         for item in items:
             self.fields[f'amount-{item.plu_number}'] = forms.IntegerField(required=False, min_value=0)

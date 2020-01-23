@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hello Bulma!</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+</head>
+<body>
+<section class="section">
+    <h3>Orders per user per item</h3>
+    <hr/>
+    <table class="table is-striped is-narrow is-fullwidth">
+        <thead>
+        <tr>
+            <th>User</th>
+            <th>Item</th>
+            <th>Amount</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for cart in carts %}
+            {% for cartitem in cart.shoppingcartitem_set.all %}
+                <tr>
+                    <td>{{ cart.user.username }}</td>
+                    <td>{{ cartitem.product.name }}</td>
+                    <td>{{ cartitem.amount }}</td>
+                    <td><input type="checkbox"></td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+        </tbody>
+    </table>
+    <h3>Orders per item</h3>
+    <hr/>
+    <table class="table is-striped is-narrow is-fullwidth">
+        <thead>
+        <tr>
+            <th>Item</th>
+            <th>Amount</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item, amount in item_amounts.items %}
+            <tr>
+                <td>{{ item }}</td>
+                <td>{{ amount }}</td>
+                <td><input type="checkbox"></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</section>
+</body>
+</html>
