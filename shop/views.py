@@ -1,13 +1,14 @@
 from django.http import HttpResponseForbidden
 from django.views.generic import (TemplateView,
                                   FormView,
-                                  ListView)
+                                  ListView,
+                                  DetailView)
 from django.views.generic.edit import FormMixin
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy, reverse
 
 from shop.forms import UpdatePricesForm, OrderForm
-from shop.models import Item, ShoppingCartItem, ShoppingCart
+from shop.models import Item, ShoppingCart
 
 
 class IndexView(TemplateView):
@@ -22,7 +23,7 @@ class OrderView(FormMixin, ListView):
     form_class = OrderForm
 
     def get_success_url(self):
-        return reverse(viewname='home')
+        return reverse(viewname='cart')
 
     def post(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
@@ -35,14 +36,27 @@ class OrderView(FormMixin, ListView):
 
     def form_valid(self, form):
         filtered = dict(
-            (key.strip('amount-'), value) for (key, value) in form.cleaned_data.items() if value is not None)
+            (key.strip('amount-'), value) for (key, value) in form.cleaned_data.items() if
+            value is not None and
+            value != 0 and
+            key != 'remarks')
 
         cart, created = ShoppingCart.objects.get_or_create(user=self.request.user, completed=False)
+        for plu_number, amount in filtered.items():
+            cart.add_item(plu_number=plu_number, amount=amount)
         cart.save()
-        [ShoppingCartItem(product=Item.objects.get(plu_number=plu_number), amount=amount, cart=cart).save() for
-         (plu_number, amount) in filtered.items()]
 
         return super(OrderView, self).form_valid(form)
+
+
+class ShoppingCartView(LoginRequiredMixin, DetailView):
+    template_name = 'shop/shopping_cart.html'
+    model = ShoppingCart
+    context_object_name = 'cart'
+
+    def get_object(self, queryset=None):
+        obj, created = ShoppingCart.objects.get_or_create(user=self.request.user, completed=False)
+        return obj
 
 
 class UploadPricesView(LoginRequiredMixin, UserPassesTestMixin, FormView):

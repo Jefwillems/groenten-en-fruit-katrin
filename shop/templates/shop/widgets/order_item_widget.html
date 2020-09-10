@@ -1,0 +1,48 @@
+<div class="column is-one-fifth is-half-mobile is-one-third-tablet">
+    <div class="card">
+        {% if item.image %}
+            <div class="card-image">
+                <figure class="image is-4by3">
+                    <img src="{{ item.image.url }}"
+                         alt="photo of {{ item.name }}">
+                </figure>
+            </div>
+        {% endif %}
+        <div class="card-content">
+            <div class="media">
+                <div class="media-content">
+                    <p class="title is-4">{{ item.name }}</p>
+                    <p class="subtitle is-6">€ {{ item.price }} / {{ item.unit.name }}</p>
+                </div>
+            </div>
+
+            <div class="content">
+                {{ item.description }}
+            </div>
+        </div>
+        <footer class="card-footer">
+            <p class="control">
+                <a class="button is-link is-inverted remove-item">
+                    -
+                </a>
+            </p>
+            {% comment %}
+                <button class="button is-link is-inverted remove-item" type="button">-</button>
+                    <button class="button is-primary is-inverted is-disabled"
+                        id="amount-{{ item.plu_number }}">0
+                    </button>
+                    <button class="button is-link is-inverted add-item" type="button">+</button>
+                {% endcomment %}
+            <p class="control is-expanded">
+                <input id="amount-{{ item.plu_number }}" class="input" type="{{ widget.type }}"
+                       name="{{ widget.name }}"
+                        {% if widget.value != None %}
+                       value="{{ widget.value|stringformat:'s' }}"{% endif %}{% include 'django/forms/widgets/attrs.html' %}>
+            </p>
+
+            <p class="control">
+                <a class="button is-link is-inverted add-item">+</a>
+            </p>
+        </footer>
+    </div>
+</div>

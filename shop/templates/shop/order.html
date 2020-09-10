@@ -6,41 +6,7 @@
             <form method="post" id="order-form">
                 {% csrf_token %}
                 <div class="columns">
-                    {% for item in items %}
-                        <div class="column is-one-fifth is-half-mobile is-one-third-tablet">
-                            <div class="card">
-                                {% if item.image %}
-                                    <div class="card-image">
-                                        <figure class="image is-4by3">
-                                            <img src="{{ item.image.url }}"
-                                                 alt="photo of {{ item.name }}">
-                                        </figure>
-                                    </div>
-                                {% endif %}
-                                <div class="card-content">
-                                    <div class="media">
-                                        <div class="media-content">
-                                            <p class="title is-4">{{ item.name }}</p>
-                                            <p class="subtitle is-6">€ {{ item.price }} / {{ item.unit.name }}</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="content">
-                                        {{ item.description }}
-                                    </div>
-                                </div>
-                                <footer class="card-footer">
-                                    <div class="buttons has-addons card-footer-item is-paddingless">
-                                        <button class="button is-link is-inverted remove-item" type="button">-</button>
-                                        <button class="button is-primary is-inverted is-disabled"
-                                                id="amount-{{ item.plu_number }}">0
-                                        </button>
-                                        <button class="button is-link is-inverted add-item" type="button">+</button>
-                                    </div>
-                                </footer>
-                            </div>
-                        </div>
-                    {% endfor %}
+                    {{ form.as_p }}
                 </div>
                 <button type="submit" class="button is-link">submit</button>
             </form>

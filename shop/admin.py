@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.db.models import QuerySet, Count
 from django.shortcuts import render
+import functools
 
 from shop.models import Item, PriceUnit, ShoppingCart
 
@@ -34,21 +35,13 @@ class ShoppingCartAdmin(admin.ModelAdmin):
         queryset.update(completed=False)
         return request
 
-    mark_incomplete.short_description = 'Mark orders as incomplete'
+    mark_incomplete.short_description = 'Mark orders as incomplete.'
 
     def mark_complete(self, request, queryset: QuerySet):
         valid_orders = queryset.filter(completed=False)
 
-        shoppingcartitems_per_order = [x.shoppingcartitem_set.all() for x in valid_orders.all()]
-        items_list = shoppingcartitems_per_order[0]
-        for shoppingcartitems in shoppingcartitems_per_order[1:]:
-            items_list = items_list | shoppingcartitems
-
-        item_amounts = dict()
-        for items in items_list:
-            if items.product.name not in item_amounts:
-                item_amounts[items.product.name] = 0
-            item_amounts[items.product.name] += items.amount
+        item_amounts = [x.get_items_counters() for x in valid_orders.all()]
+        item_amounts = functools.reduce(lambda a, b: a.merge(b), item_amounts).item_amounts
 
         page = render(request, template_name='shop/export.html',
                       context={'carts': valid_orders, 'item_amounts': item_amounts})
@@ -56,7 +49,7 @@ class ShoppingCartAdmin(admin.ModelAdmin):
 
         return page
 
-    mark_complete.short_description = 'Print and mark completed'
+    mark_complete.short_description = 'Print and mark completed.'
 
     class Meta:
         model = ShoppingCart

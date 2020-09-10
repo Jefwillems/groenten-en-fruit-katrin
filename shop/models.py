@@ -1,6 +1,9 @@
 from django.db import models
 from decimal import Decimal
 
+from django.db.models import F
+
+from shop.util import ItemCounter
 from users.models import ShopUser
 
 
@@ -59,9 +62,23 @@ class Item(models.Model):
 
 
 class ShoppingCart(models.Model):
-    user = models.OneToOneField(to=ShopUser, on_delete=models.CASCADE, related_name='cart')
+    user = models.ForeignKey(to=ShopUser, on_delete=models.CASCADE, related_name='cart')
     items = models.ManyToManyField(to=Item, through='ShoppingCartItem')
     completed = models.BooleanField(default=False)
+
+    def get_items_counters(self):
+        return ItemCounter(self)
+
+    def add_item(self, plu_number: int, amount: int):
+        exists = self.items.filter(plu_number=plu_number).exists()
+        if exists:
+            cart_item = self.shoppingcartitem_set.get(product__plu_number=plu_number)
+            cart_item.amount = F('amount') + amount
+            cart_item.save(update_fields=['amount'])
+        else:
+            shoppingcart_item = ShoppingCartItem(cart=self, product=Item.objects.get(plu_number=plu_number),
+                                                 amount=amount)
+            shoppingcart_item.save()
 
 
 class ShoppingCartItem(models.Model):

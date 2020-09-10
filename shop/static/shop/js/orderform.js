@@ -4,7 +4,7 @@
   const substractOne = (x) => x - 1;
 
   const createNewValue = (target, fn) => {
-    const currentValue = parseInt(target.innerText, 10);
+    const currentValue = parseInt(target.value, 10);
     const newValue = fn(currentValue);
     return validateAndAdjust(newValue)
   };
@@ -34,9 +34,9 @@
     setupButtons(btns, fn) {
       [].forEach.call(btns, (btn) => {
         btn.addEventListener('click', (ev) => {
-          const targetNode = ev.target.parentNode.children[1];
+          const targetNode = ev.target.parentElement.parentElement.children[1].children.item(0);
           const newValue = createNewValue(targetNode, fn);
-          targetNode.innerText = newValue;
+          targetNode.value = newValue;
           stateSync.setValue(targetNode.id, newValue);
         });
       });

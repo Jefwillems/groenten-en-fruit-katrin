@@ -1,0 +1,14 @@
+{% extends 'shop/base.html' %}
+
+{% block head %}
+    <title>shoppingcart - {{ request.user.username }}</title>
+{% endblock %}
+
+{% block content %}
+    <ul>
+        {% for cart_item in cart.shoppingcartitem_set.all %}
+            <li>{{ cart_item.product.name }}: {{ cart_item.amount }}</li>
+        {% endfor %}
+
+    </ul>
+{% endblock %}

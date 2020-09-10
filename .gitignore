@@ -123,3 +123,5 @@ dmypy.json
 
 .idea/
 TODO.md
+/shop/static/shop/img/logo_horizontal.psd
+.DS_Store
